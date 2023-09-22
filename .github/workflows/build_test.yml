@@ -4,18 +4,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  windows:
-    name: run on windows
+  build-windows:
+    name: Run on Windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: ilammy/msvc-dev-cmd@master
-    - name: Build something requiring CL.EXE
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - name: Setup MSVC Dev Cmd
+        uses: ilammy/msvc-dev-cmd@master
+      
+      - name: Build something requiring CL.EXE
         run: |
           cmake -G "NMake Makefiles" .
           nmake
 
-    - name: show files
+      - name: Show Files
         run: |
           dir
           tree /f
