@@ -9,15 +9,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
       
-      - name: Setup MSVC Dev Cmd
-        uses: ilammy/msvc-dev-cmd@master
-      
-      - name: Build something requiring CL.EXE
-        run: |
-          cmake -G "NMake Makefiles" .
-          nmake
+      - name: Compile Visual Studio project with MSBuild
+        shell: cmd 
+        run: ${{ '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" && msbuild' }}
+        working-directory: vs10
 
       - name: Show Files
         run: |
