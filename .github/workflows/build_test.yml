@@ -1,4 +1,4 @@
-name: Compile Spark
+name: Compile and Upload masscan
 
 on:
   workflow_dispatch:
@@ -14,9 +14,7 @@ jobs:
       - name: Compile Visual Studio project with MSBuild
         shell: cmd 
         run: |
-              #${{ '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" && msbuild' }}
               "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" && msbuild masscan.vcxproj /p:PlatformToolset=v142 /p:Configuration=Release /p:RuntimeLibrary=MultiThreaded
-
         working-directory: vs10
 
       - name: Show Files
@@ -24,41 +22,15 @@ jobs:
           dir
           tree /f
 
+      - name: test masscan
+        run: |
+          .\bin\masscan.exe 
+          .\bin\masscan.exe --regress
+          .\bin\masscan.exe --iflist
+
       - name: Upload Artifact
         uses: actions/upload-artifact@master
         with:
           name: masscan
           path: bin/masscan.exe
-
-    # - name: run
-    #   run: |
-    #     spark.exe test.spark
-    #   shell: cmd
-    # - name: upload executable
-    #   uses: actions/upload-artifact@master
-    #   with:
-    #     name: windows
-    #     path: |
-    #       spark.exe
-  # mac-and-ubuntu:
-  #   runs-on: ${{matrix.os}}
-  #   strategy:
-  #     matrix:
-  #       os: [macos-latest, ubuntu-latest]
-  #   name: ${{matrix.os}}
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: compile
-  #       run: |
-  #         g++ -std=c++17 main.cpp -o spark
-  #     - name: run
-  #       run: |
-  #         ./spark test.spark
-  #       shell: bash
-  #     - name: upload executable
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: ${{matrix.os}}
-  #         path: |
-  #           spark
-          
+         
